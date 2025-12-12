@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,8 @@
       }
     </script>
     <style>
-      html {
+      html, body {
+        height: 100%;
         scroll-behavior: smooth;
         scroll-padding-top: 80px;
       }
@@ -71,6 +72,15 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+      
+      /* Animation for loader */
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .animate-pulse-slow {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
     </style>
   <script type="importmap">
 {
@@ -85,7 +95,12 @@
 }
 </script>
 </head>
-  <body class="bg-slate-50 text-slate-900 selection:bg-science-200 selection:text-science-900">
-    <div id="root"></div>
+  <body class="bg-slate-50 text-slate-900 selection:bg-science-200 selection:text-science-900 h-full">
+    <div id="root" class="h-full w-full flex items-center justify-center bg-slate-50">
+      <div class="flex flex-col items-center gap-4">
+         <div class="w-12 h-12 rounded-xl bg-teal-600 animate-pulse-slow"></div>
+         <div class="text-slate-400 font-mono text-sm">Initializing LabReady OS...</div>
+      </div>
+    </div>
   </body>
 </html>

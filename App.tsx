@@ -22,10 +22,13 @@ interface ErrorBoundaryState {
 }
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  public state: ErrorBoundaryState = {
-    hasError: false,
-    error: null
-  };
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { 
+      hasError: false, 
+      error: null 
+    };
+  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -38,7 +41,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-8 max-w-2xl mx-auto mt-20 bg-red-50 border border-red-200 rounded-lg shadow-lg">
+        <div className="p-8 max-w-2xl mx-auto mt-20 bg-red-50 border border-red-200 rounded-lg shadow-lg font-sans">
           <h1 className="text-2xl font-bold text-red-800 mb-4">Something went wrong.</h1>
           <p className="text-red-600 mb-4">The application encountered an error. Please check the console for details.</p>
           <pre className="bg-white p-4 rounded border border-red-100 text-sm overflow-auto text-red-900 font-mono">
@@ -83,6 +86,7 @@ const AppContent: React.FC = () => {
       case '/contact':
         return <Contact />;
       default:
+        // Simple fallback to Home for now, or 404
         return <Home />;
     }
   };
