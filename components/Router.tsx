@@ -13,22 +13,27 @@ const RouterContext = createContext<RouterContextType>({
 export const useRouter = () => useContext(RouterContext);
 
 export const Router: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [path, setPath] = useState<string>(() => 
-    typeof window !== 'undefined' ? window.location.pathname : '/'
-  );
+  // Helper to get the path from the hash (removes the starting '#')
+  // e.g. "https://site.com/#/features" -> "/features"
+  const getHashPath = () => {
+    if (typeof window === 'undefined') return '/';
+    return window.location.hash.slice(1) || '/';
+  };
+
+  const [path, setPath] = useState<string>(getHashPath);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const onPopState = () => setPath(window.location.pathname);
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
+    const onHashChange = () => setPath(getHashPath());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   const navigate = useCallback((newPath: string) => {
     if (typeof window === 'undefined') return;
-    window.history.pushState({}, '', newPath);
-    setPath(newPath);
+    // Update the hash, which triggers the hashchange event
+    window.location.hash = newPath;
     window.scrollTo(0, 0);
   }, []);
 
@@ -54,7 +59,7 @@ export const Link: React.FC<LinkProps> = ({ href, children, className, onClick, 
   };
 
   return (
-    <a href={href} onClick={handleClick} className={className} {...props}>
+    <a href={`#${href}`} onClick={handleClick} className={className} {...props}>
       {children}
     </a>
   );
